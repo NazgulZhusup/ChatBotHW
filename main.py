@@ -14,7 +14,7 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start(message: Message):
-    await message.answer(f'Привет, {message.from_user.first_name}!')
+    await message.answer(f'Привет, {message.from_user.first_name}! Здесь ты можешь загрузить фото и я сохраню его.  А еще я переведу любой текст на французский язык')
 
 @dp.message(Command('help'))
 async def help(message: Message):
@@ -50,7 +50,7 @@ async def hello(message: Message):
 translator = Translator()
 @dp.message()
 async def translate_text(message: Message):
-    translated = translator.translate(message.text, dest='en')
+    translated = translator.translate(message.text, dest='fr')
     await message.answer(translated.text)
 
 
