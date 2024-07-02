@@ -14,7 +14,7 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start(message: Message):
-    await message.answer(f'Привет, {message.from_user.first_name}! Здесь ты можешь загрузить фото и я сохраню его.  А еще я переведу любой текст на французский язык')
+    await message.answer(f'Привет, {message.from_user.first_name}! Нажмите на меню слева и выберите интересующий пункт')
 
 @dp.message(Command('help'))
 async def help(message: Message):
@@ -47,11 +47,16 @@ async def hello(message: Message):
     os.remove('hello.ogg')
 
 
-translator = Translator()
-@dp.message()
-async def translate_text(message: Message):
-    translated = translator.translate(message.text, dest='fr')
-    await message.answer(translated.text)
+# translator = Translator()
+# @dp.message()
+# async def translate_text(message: Message):
+#     translated = translator.translate(message.text, dest='fr')
+#     await message.answer(translated.text)
+
+
+@dp.message(F.text == 'Здравствуйте, можно ваш прайс лист?')
+async def aitext(message: Message):
+    await message.answer('')
 
 
 
