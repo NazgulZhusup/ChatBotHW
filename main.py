@@ -1,9 +1,11 @@
 import asyncio
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, FSInputFile, CallbackQuery
 from config import TOKEN
 from googletrans import Translator
+
+import keyboard as kb
 
 from gtts import gTTS
 import os
@@ -14,7 +16,36 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start(message: Message):
-    await message.answer(f'Привет, {message.from_user.first_name}! Нажмите на меню слева и выберите интересующий пункт')
+    await message.answer(f'Привет, {message.from_user.first_name}!', reply_markup=kb.greet)
+
+@dp.message(F.text == "Привет")
+async def hello_button(message: Message):
+    await message.answer(f'Привет, {message.from_user.first_name}!')
+
+@dp.message(F.text == "Пока")
+async def hello_button(message: Message):
+    await message.answer(f'До свидания, {message.from_user.first_name}!')
+
+
+@dp.message(Command('link'))
+async def link(message: Message):
+    await message.answer('Выберите любую ссылку!', reply_markup=kb.inline_keyboard)
+
+
+@dp.message(Command('dynamic'))
+async def dynamic(message: Message):
+    await message.answer('Нажми', reply_markup=kb.another_inline_keyboard)
+
+@dp.callback_query(F.data == 'more')
+async def more(callback: CallbackQuery):
+    await callback.answer("Кнопки подгружаются", show_alert=True)
+    await callback.message.edit_text('Нажмите на нужную опцию!', reply_markup=await kb.opt_keyboard())
+
+
+@dp.callback_query(F.data.in_(kb.my_buttons))
+async def option_selected(callback: CallbackQuery):
+    await callback.message.answer(f"Вы выбрали: {callback.data}")
+
 
 @dp.message(Command('help'))
 async def help(message: Message):
